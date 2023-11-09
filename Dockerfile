@@ -1,13 +1,14 @@
-FROM python:slim-bullseye
+FROM python:3.11-slim
 
-RUN mkdir /app
+# RUN mkdir /telecom
+COPY telecom/ /app/telecom
 
 COPY requirements.txt /app
 
 RUN pip3 install -r /app/requirements.txt --no-cache-dir
 
-COPY xwick-telecom/ /app
-
 WORKDIR /app
 
 CMD ["uvicorn", "telecom.main:app", "--reload"]
+
+LABEL author='Sihuan Newrise' version=1
