@@ -1,0 +1,33 @@
+version: '2.1'
+services: 
+  nocodb:
+    container_name: nocodb
+    depends_on: 
+      telecom_db:
+        condition: service_healthy
+    env_file: stack.env
+    environment:
+      NC_DB: "pg://${POSTGRES_DB}:5432?u=${POSTGRES_USER}&p=${POSTGRES_PASSWORD}&d=${POSTGRES_DB}"
+    image: "nocodb/nocodb:latest"
+    ports: 
+      - "8080:8080"
+    restart: unless-stopped
+    volumes: 
+      - "/volume1/Docker/nocodb/nc_data:/usr/app/data"
+
+  telecom_db:
+    container_name: nocodb-pg
+    env_file: stack.env
+    healthcheck: 
+      interval: 10s
+      retries: 10
+      test: "pg_isready -U \"${POSTGRES_USER}\" -d \"${POSTGRES_DB}\""
+      timeout: 2s
+    image: postgres:16.1
+    restart: unless-stopped
+    volumes: 
+      - "/volume1/Docker/nocodb/db_data:/var/lib/postgresql/data"
+
+# volumes:
+#   db_data: /volume4/docker/nocodb/db_data
+#   nc_data: /volume4/docker/nocodb/nc_data
