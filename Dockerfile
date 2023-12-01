@@ -1,14 +1,16 @@
-FROM python:3.11-slim
-
-# RUN mkdir /telecom
-COPY telecom/ /app/telecom
-
-COPY requirements.txt /app
-
-RUN pip3 install -r /app/requirements.txt --no-cache-dir
+FROM python:3.11.1-slim
 
 WORKDIR /app
 
-CMD ["uvicorn", "telecom.main:app", "--reload"]
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
-LABEL author='Sihuan Newrise' version=1
+COPY requirements.txt .
+
+RUN pip3 install -r /app/requirements.txt --no-cache-dir
+
+COPY ./telecom .
+
+# CMD ["uvicorn", "telecom.main:app", "--reload"]
+
+# LABEL author='Sihuan Newrise' version=1
