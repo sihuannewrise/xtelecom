@@ -31,6 +31,27 @@ services:
       - db_data:/var/lib/postgresql/data
     networks:
       - telecom_net
+  # web:
+  #   build: .
+  #   restart: unless-stopped
+  #   volumes:
+  #     - static_value:/app/static/
+  #     - media_value:/app/media/
+  #   depends_on:
+  #     - telecom_db
+  #   env_file: stack.env
+
+  # nginx:
+  #   image: nginx:mainline-alpine3.18-slim
+  #   restart: unless-stopped
+  #   ports:
+  #     - "80:80"
+  #   volumes:
+  #     - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+  #     - static_value:/var/html/static/
+  #     - media_value:/var/html/media/
+  #   depends_on:
+  #     - web
 
 volumes:
   nc_data:
@@ -48,6 +69,10 @@ volumes:
       type: none
       device: /volume4/dockume/nocodb/db_data
       o: bind
+
+  static_value:
+  media_value:
+
 
 networks:
   telecom_net:
