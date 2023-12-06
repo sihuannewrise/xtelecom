@@ -13,7 +13,7 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - /volume4/dockume/nocodb/nc_data:/usr/app/data
+      - nc_data:/usr/app/data
     networks:
       - telecom_net
 
@@ -28,9 +28,26 @@ services:
     image: postgres:16.1-alpine
     restart: unless-stopped
     volumes:
-      - /volume4/dockume/nocodb/db_data:/var/lib/postgresql/data
+      - db_data:/var/lib/postgresql/data
     networks:
       - telecom_net
+
+volumes:
+  nc_data:
+    name: nc_data
+    driver: local
+    driver_opts:
+      type: none
+      device: /volume4/dockume/nocodb/nc_data
+      o: bind
+
+  db_data:
+    name: db_data
+    driver: local
+    driver_opts:
+      type: none
+      device: /volume4/dockume/nocodb/db_data
+      o: bind
 
 networks:
   telecom_net:
