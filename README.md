@@ -1,1 +1,1 @@
-# xwick-telecom
+# xwick ecosystem
