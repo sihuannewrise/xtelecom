@@ -32,7 +32,7 @@ services:
     networks:
       - telecom_net
   # web:
-  #   build: .
+  #   build: ../telecom
   #   restart: unless-stopped
   #   volumes:
   #     - static_value:/app/static/
