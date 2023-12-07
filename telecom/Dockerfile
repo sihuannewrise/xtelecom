@@ -11,6 +11,6 @@ RUN pip3 install -r /app/requirements.txt --no-cache-dir
 
 COPY ./telecom .
 
-# CMD ["uvicorn", "telecom.main:app", "--reload"]
+CMD ["uvicorn", "telecom.main:app", "--reload"]
 
-# LABEL author='Sihuan Newrise' version=1
+LABEL author='Sihuan Newrise' version=1
