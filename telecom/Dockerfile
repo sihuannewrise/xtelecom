@@ -9,7 +9,7 @@ COPY requirements.txt .
 
 RUN pip3 install -r /app/requirements.txt --no-cache-dir
 
-COPY ./telecom .
+ADD telecom /app/telecom
 
 CMD ["uvicorn", "telecom.main:app", "--reload"]
 
