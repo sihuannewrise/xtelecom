@@ -31,7 +31,7 @@ services:
       - db_data:/var/lib/postgresql/data
     networks:
       - telecom_net
-  # web:
+  # telecom:
   #   build: ../telecom
   #   restart: unless-stopped
   #   volumes:

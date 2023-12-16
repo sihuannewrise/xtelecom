@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+
 from telecom.core.config import settings
 
 app = FastAPI(title=settings.app_title, docs_url="/swagger")
@@ -6,7 +7,7 @@ app = FastAPI(title=settings.app_title, docs_url="/swagger")
 
 @app.get("/")
 def read_root():
-    return {"hello": "world"}
+    return {"hello": "telecom"}
 
 
 @app.get("/config", tags=["settings"])
