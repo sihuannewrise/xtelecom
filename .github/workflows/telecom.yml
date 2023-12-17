@@ -46,10 +46,10 @@ jobs:
         name: Push to Docker Hub
         uses: docker/build-push-action@v5
         with:
-          context: telecom/
-          file: ./telecom/Dockerfile
+          context: xwick/
+          file: ./xwick/telecom/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/xwick:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/xwick:1.0.0
 
   # deploy:
   #   runs-on: ubuntu-latest
