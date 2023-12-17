@@ -47,7 +47,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: xwick/
-          file: ./xwick/telecom/Dockerfile
+          file: ./xwick/Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/xwick:1.0.0
 
