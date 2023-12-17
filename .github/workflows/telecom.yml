@@ -46,8 +46,8 @@ jobs:
         name: Push to Docker Hub
         uses: docker/build-push-action@v5
         with:
-          context: xwick/
-          file: ./xwick/Dockerfile
+          context: .
+          file: ./Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/xwick:1.0.0
 
