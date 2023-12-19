@@ -3,6 +3,9 @@ name: Telecom-app workflow
 on:
   push:
     branches: [ main ]
+    paths-ignore:
+      - "infra/"
+      - "README.md"
 
 jobs:
   tests:

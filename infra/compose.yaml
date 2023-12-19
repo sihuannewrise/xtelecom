@@ -3,11 +3,11 @@ services:
   nocodb:
     container_name: nocodb
     depends_on:
-      telecom_db:
+      postgres:
         condition: service_healthy
     env_file: stack.env
     environment:
-      NC_DB: "pg://${POSTGRES_DB}:5432?u=${POSTGRES_USER}&p=${POSTGRES_PASSWORD}&d=${POSTGRES_DB}"
+      NC_DB: "pg://postgres:5432?u=${POSTGRES_USER}&p=${POSTGRES_PASSWORD}&d=${POSTGRES_DB}"
     image: "nocodb/nocodb:latest"
     restart: unless-stopped
     ports:
@@ -17,18 +17,65 @@ services:
     networks:
       - telecom_net
 
-  telecom_db:
-    container_name: telecom_db
+  postgres:
+    container_name: postgres
+    image: postgres:16.1-alpine
+    command:
+      - "postgres"
+      - "-c"
+      - "max_connections=50"
+      - "-c"
+      - "shared_buffers=1GB"
+      - "-c"
+      - "effective_cache_size=4GB"
+      - "-c"
+      - "work_mem=16MB"
+      - "-c"
+      - "maintenance_work_mem=512MB"
+      - "-c"
+      - "random_page_cost=1.1"
+      - "-c"
+      - "temp_file_limit=10GB"
+      - "-c"
+      - "log_min_duration_statement=200ms"
+      - "-c"
+      - "idle_in_transaction_session_timeout=10s"
+      - "-c"
+      - "lock_timeout=1s"
+      - "-c"
+      - "statement_timeout=60s"
+      - "-c"
+      - "shared_preload_libraries=pg_stat_statements"
+      - "-c"
+      - "pg_stat_statements.max=10000"
+      - "-c"
+      - "pg_stat_statements.track=all"
     env_file: stack.env
     healthcheck:
       interval: 10s
       retries: 10
       test: "pg_isready -U \"${POSTGRES_USER}\" -d \"${POSTGRES_DB}\""
       timeout: 2s
-    image: postgres:16.1-alpine
     restart: unless-stopped
+    ports:
+      - "5432:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
+    networks:
+      - telecom_net
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4:8.1
+    env_file: stack.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    restart: unless-stopped
     networks:
       - telecom_net
   # telecom:
@@ -68,6 +115,14 @@ volumes:
     driver_opts:
       type: none
       device: /volume4/dockume/nocodb/db_data
+      o: bind
+
+  pgadmin_data:
+    name: pgadmin_data
+    driver: local
+    driver_opts:
+      type: none
+      device: /volume4/dockume/nocodb/pgadmin_data
       o: bind
 
   static_value:
