@@ -10,6 +10,7 @@ on:
 env:
   TUNA_SSH_USER: tuna_sa
   TUNA_HOST: ru.tuna.am
+  TUNA_SSH_PORT: 15010
   XTELECOM_CONTAINER_NAME: telecom
   XTELECOM_HOST_NAME: telecom
   XTELECOM_VERSION: 1.0.0
@@ -72,7 +73,7 @@ jobs:
           host: ${{ env.TUNA_HOST }}
           username: ${{ env.TUNA_SSH_USER }}
           passphrase: ${{ secrets.TUNA_SSH_PWD }}
-          port: ${{ secrets.TUNA_SSH_PORT }}
+          port: ${{ env.TUNA_SSH_PORT }}
           key: ${{ secrets.TUNA_SSH_KEY }}
           script: |
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/xtelecom:${{ env.XTELECOM_VERSION }}
