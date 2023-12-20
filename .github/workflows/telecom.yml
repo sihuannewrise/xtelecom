@@ -10,7 +10,7 @@ on:
 env:
   TUNA_SSH_USER: tuna_sa
   TUNA_HOST: ru.tuna.am
-  TUNA_SSH_PORT: 15010
+  TUNA_SSH_PORT: 17636
   XTELECOM_CONTAINER_NAME: telecom
   XTELECOM_HOST_NAME: telecom
   XTELECOM_VERSION: 1.0.0
@@ -89,4 +89,6 @@ jobs:
         with:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
-          message: ${{ github.workflow }} успешно выполнен! 
+          message: |
+            ${{ github.workflow }} успешно выполнен!
+            Репозиторий: ${{ github.repository }}
