@@ -4,8 +4,15 @@ on:
   push:
     branches: [ main ]
     paths-ignore:
-      - "infra/"
+      - "infra"
       - "README.md"
+
+env:
+  TUNA_SSH_USER: tuna_sa
+  TUNA_HOST: ru.tuna.am
+  XTELECOM_CONTAINER_NAME: telecom
+  XTELECOM_HOST_NAME: telecom
+  XTELECOM_VERSION: 1.0.0
 
 jobs:
   tests:
@@ -52,9 +59,22 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/xwick:1.0.0
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/xtelecom:${{ env.XTELECOM_VERSION }}
 
-  # deploy:
-  #   runs-on: ubuntu-latest
-  #   needs: build
-  #   steps:
+  deploy:
+    name: Deploy on Asustor with Tuna
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: executing remote ssh commands to deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.TUNA_HOST }}
+          username: ${{ env.TUNA_SSH_USER }}
+          port: ${{ secrets.TUNA_SSH_PORT }}
+          key: ${{ secrets.TUNA_SSH_KEY }}
+          passphrase: ${{ secrets.TUNA_SSH_PWD }}
+          script: |
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/xtelecom:${{ env.XTELECOM_VERSION }}
+            docker stop ${{ env.XTELECOM_CONTAINER_NAME }}
+            docker run --rm --name=${{ env.XTELECOM_CONTAINER_NAME }} --hostname=${{ env.XTELECOM_HOST_NAME }} -d -p 45321:8000 ${{ secrets.DOCKERHUB_USERNAME }}/xtelecom:${{ env.XTELECOM_VERSION }} 
