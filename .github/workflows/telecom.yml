@@ -72,7 +72,7 @@ jobs:
         with:
           host: ${{ env.TUNA_HOST }}
           username: ${{ env.TUNA_SSH_USER }}
-          passphrase: ${{ secrets.TUNA_SSH_PWD }}
+          password: ${{ secrets.TUNA_SSH_PWD }}
           port: ${{ env.TUNA_SSH_PORT }}
           key: ${{ secrets.TUNA_SSH_KEY }}
           script: |
