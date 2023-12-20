@@ -78,27 +78,29 @@ services:
     restart: unless-stopped
     networks:
       - telecom_net
-  # telecom:
-  #   build: ../telecom
-  #   restart: unless-stopped
-  #   volumes:
-  #     - static_value:/app/static/
-  #     - media_value:/app/media/
-  #   depends_on:
-  #     - telecom_db
-  #   env_file: stack.env
 
-  # nginx:
-  #   image: nginx:mainline-alpine3.18-slim
-  #   restart: unless-stopped
-  #   ports:
-  #     - "80:80"
-  #   volumes:
-  #     - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
-  #     - static_value:/var/html/static/
-  #     - media_value:/var/html/media/
-  #   depends_on:
-  #     - web
+  telecom:
+    container_name: telecom
+    image: sihuannewrise/xtelecom:latest
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    volumes:
+      - static_value:/app/static/
+      - media_value:/app/media/
+    env_file: stack.env
+
+  nginx:
+    image: nginx:mainline-alpine3.18-slim
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - static_value:/var/html/static/
+      - media_value:/var/html/media/
+    depends_on:
+      - telecom
 
 volumes:
   nc_data:
