@@ -89,18 +89,23 @@ services:
       - static_value:/app/static/
       - media_value:/app/media/
     env_file: stack.env
+    networks:
+      - telecom_net
 
   nginx:
-    image: nginx:mainline-alpine3.18-slim
+    container_name: nginx
+    image: nginx:stable-alpine3.17-slim
     restart: unless-stopped
     ports:
       - "80:80"
     volumes:
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - /volume4/dockume/app/xtelecom/nginx/default.conf:/etc/nginx/conf.d/default.conf
       - static_value:/var/html/static/
       - media_value:/var/html/media/
     depends_on:
       - telecom
+    networks:
+      - telecom_net
 
 volumes:
   nc_data:
