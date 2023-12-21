@@ -57,6 +57,7 @@ jobs:
         name: Push to Docker Hub
         uses: docker/build-push-action@v5
         with:
+          context: telecom
           file: telecom/Dockerfile
           push: true
           tags: |
