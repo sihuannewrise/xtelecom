@@ -9,8 +9,8 @@ COPY requirements.txt .
 
 RUN pip3 install -r /app/requirements.txt --no-cache-dir
 
-ADD xwick/telecom /app/xwick/telecom
+ADD telecom /app/telecom
 
-CMD ["uvicorn", "xwick.telecom.main:app", "--host=0.0.0.0"]
+CMD ["uvicorn", "telecom.main:app", "--host=0.0.0.0"]
 
-LABEL copyright='@xwick' version=1
+LABEL copyright='@xwick'

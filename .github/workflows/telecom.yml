@@ -1,16 +1,19 @@
-name: Telecom-app workflow
+name: XTelecom-app workflow
 
 on:
   push:
     branches: [ main ]
 
 env:
+  # service account name (any) displayed in Tuna console
   TUNA_SSH_USER: tuna_sa
   TUNA_HOST: ru.tuna.am
+  # is changed every time Tuna starts (later should be constant)
   TUNA_SSH_PORT: 11194
   XTELECOM_CONTAINER_NAME: telecom
   XTELECOM_HOST_NAME: telecom
-  XTELECOM_VERSION: 1.0.1
+  # manual program version indication - to be automated
+  XTELECOM_VERSION: dev.1.0.2
 
 jobs:
   tests:
@@ -54,8 +57,7 @@ jobs:
         name: Push to Docker Hub
         uses: docker/build-push-action@v5
         with:
-          context: .
-          file: ./Dockerfile
+          file: telecom/Dockerfile
           push: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/xtelecom:latest
@@ -88,5 +90,7 @@ jobs:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
           message: |
+            ✨ Hey there! ✨
             ${{ github.workflow }} успешно выполнен!
             Репозиторий: ${{ github.repository }}
+            Sincerely yours, ✨ Xwick Bot ✨
