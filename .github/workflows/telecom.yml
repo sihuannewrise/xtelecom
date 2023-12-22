@@ -18,7 +18,7 @@ env:
   XTELECOM_NETWORK_NAME: telecom_net
   XTELECOM_SUBNET_CIDR: 172.16.1.0/24
   # manual program version indication - to be automated
-  XTELECOM_VERSION: dev.1.0.5
+  XTELECOM_VERSION: dev.1.0.6
 
 jobs:
   test:
