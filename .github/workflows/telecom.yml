@@ -13,8 +13,10 @@ env:
   # is changed every time Tuna starts (later should be constant)
   TUNA_SSH_PORT: 18148
   XTELECOM_CONTAINER_NAME: telecom
+  # hostname, displayed in container conlose
   XTELECOM_HOST_NAME: telecom
   XTELECOM_NETWORK_NAME: telecom_net
+  XTELECOM_SUBNET_CIDR: 172.16.1.0/24
   # manual program version indication - to be automated
   XTELECOM_VERSION: dev.1.0.4
 
@@ -80,6 +82,10 @@ jobs:
           password: ${{ secrets.TUNA_SSH_PWD }}
           port: ${{ env.TUNA_SSH_PORT }}
           script: |
+            docker network create \
+              --driver=bridge \
+              --subnet: ${{ env.XTELECOM_SUBNET_CIDR }} \
+              ${{ env.XTELECOM_NETWORK_NAME }}
             docker stop ${{ env.XTELECOM_CONTAINER_NAME }}
             docker rm ${{ env.XTELECOM_CONTAINER_NAME }}
             docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/xtelecom:latest
