@@ -18,7 +18,7 @@ env:
   XTELECOM_NETWORK_NAME: telecom_net
   XTELECOM_SUBNET_CIDR: 172.16.1.0/24
   # manual program version indication - to be automated
-  XTELECOM_VERSION: dev.1.0.4
+  XTELECOM_VERSION: dev.1.0.5
 
 jobs:
   test:
@@ -82,14 +82,14 @@ jobs:
           password: ${{ secrets.TUNA_SSH_PWD }}
           port: ${{ env.TUNA_SSH_PORT }}
           script: |
-            docker network create \
-              --driver=bridge \
-              --subnet: ${{ env.XTELECOM_SUBNET_CIDR }} \
-              ${{ env.XTELECOM_NETWORK_NAME }}
             docker stop ${{ env.XTELECOM_CONTAINER_NAME }}
             docker rm ${{ env.XTELECOM_CONTAINER_NAME }}
             docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/xtelecom:latest
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/xtelecom:latest
+            docker network create \
+              --driver=bridge \
+              --subnet: ${{ env.XTELECOM_SUBNET_CIDR }} \
+              ${{ env.XTELECOM_NETWORK_NAME }}
             docker run -d \
               --name=${{ env.XTELECOM_CONTAINER_NAME }} \
               --hostname=${{ env.XTELECOM_HOST_NAME }} \
@@ -110,7 +110,7 @@ jobs:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
           message: |
-            ✨ Hey there! ✨
+            Hey there!
             Рабочий поток ${{ github.workflow }} успешно выполнен!
             Репозиторий: ${{ github.repository }}
-            Sincerely yours, Xwick Bot
+            Sincerely yours, ✨ Xwick Bot ✨
