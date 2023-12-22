@@ -133,8 +133,10 @@ volumes:
       o: bind
 
   static_value:
-  media_value:
+    name: static_value
 
+  media_value:
+    name: media_value
 
 networks:
   telecom_net:
