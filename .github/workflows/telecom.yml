@@ -83,7 +83,7 @@ jobs:
             docker rm ${{ env.XTELECOM_CONTAINER_NAME }}
             docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/xtelecom:latest
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/xtelecom:latest
-            docker run --name=${{ env.XTELECOM_CONTAINER_NAME }} --hostname=${{ env.XTELECOM_HOST_NAME }} -d -p 45321:8000 ${{ secrets.DOCKERHUB_USERNAME }}/xtelecom:latest
+            docker run --name=${{ env.XTELECOM_CONTAINER_NAME }} --hostname=${{ env.XTELECOM_HOST_NAME }} -d ${{ secrets.DOCKERHUB_USERNAME }}/xtelecom:latest
 
   inform:
     name: Send message to Telegram account
@@ -99,6 +99,4 @@ jobs:
             ✨ Hey there! ✨
             ${{ github.workflow }} workflow успешно выполнен!
             Репозиторий: ${{ github.repository }}
-            \n
-            Sincerely yours,
-            Xwick Bot
+            Sincerely yours, Xwick Bot
