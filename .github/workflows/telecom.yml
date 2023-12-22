@@ -11,7 +11,7 @@ env:
   TUNA_SSH_USER: tuna_sa
   TUNA_HOST: ru.tuna.am
   # is changed every time Tuna starts (later should be constant)
-  TUNA_SSH_PORT: 11194
+  TUNA_SSH_PORT: 18148
   XTELECOM_CONTAINER_NAME: telecom
   XTELECOM_HOST_NAME: telecom
   # manual program version indication - to be automated
@@ -79,9 +79,11 @@ jobs:
           password: ${{ secrets.TUNA_SSH_PWD }}
           port: ${{ env.TUNA_SSH_PORT }}
           script: |
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/xtelecom:latest
             docker stop ${{ env.XTELECOM_CONTAINER_NAME }}
-            docker run --rm --name=${{ env.XTELECOM_CONTAINER_NAME }} --hostname=${{ env.XTELECOM_HOST_NAME }} -d -p 45321:8000 ${{ secrets.DOCKERHUB_USERNAME }}/xtelecom:latest
+            docker rm ${{ env.XTELECOM_CONTAINER_NAME }}
+            docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/xtelecom:latest
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/xtelecom:latest
+            docker run --name=${{ env.XTELECOM_CONTAINER_NAME }} --hostname=${{ env.XTELECOM_HOST_NAME }} -d -p 45321:8000 ${{ secrets.DOCKERHUB_USERNAME }}/xtelecom:latest
 
   inform:
     name: Send message to Telegram account
