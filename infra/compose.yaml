@@ -79,18 +79,18 @@ services:
     networks:
       - telecom_net
 
-  telecom:
-    container_name: telecom
-    image: sihuannewrise/xtelecom:latest
-    restart: unless-stopped
-    depends_on:
-      - postgres
-    volumes:
-      - static_value:/app/static/
-      - media_value:/app/media/
-    env_file: stack.env
-    networks:
-      - telecom_net
+  # telecom:
+  #   container_name: telecom
+  #   image: sihuannewrise/xtelecom:latest
+  #   restart: unless-stopped
+  #   depends_on:
+  #     - postgres
+  #   volumes:
+  #     - static_value:/app/static/
+  #     - media_value:/app/media/
+  #   env_file: stack.env
+  #   networks:
+  #     - telecom_net
 
   nginx:
     container_name: nginx
@@ -102,8 +102,8 @@ services:
       - /volume4/dockume/app/xtelecom/nginx/default.conf:/etc/nginx/conf.d/default.conf
       - static_value:/var/html/static/
       - media_value:/var/html/media/
-    depends_on:
-      - telecom
+    # depends_on:
+    #   - telecom
     networks:
       - telecom_net
 
