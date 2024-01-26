@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fief_client import FiefAccessTokenInfo, FiefAsync
 from telecom.core.config import settings
 
 app = FastAPI(title=settings.app_title, docs_url="/swagger")

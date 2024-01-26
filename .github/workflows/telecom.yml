@@ -69,40 +69,41 @@ jobs:
             ${{ secrets.DOCKERHUB_USERNAME }}/xtelecom:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/xtelecom:${{ env.XTELECOM_VERSION }}
 
-  deploy:
-    name: Deploy on Asustor with Tuna
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: executing remote ssh commands using password
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ env.TUNA_HOST }}
-          username: ${{ env.TUNA_SSH_USER }}
-          password: ${{ secrets.TUNA_SSH_PWD }}
-          port: ${{ env.TUNA_SSH_PORT }}
-          script: |
-            docker stop ${{ env.XTELECOM_CONTAINER_NAME }}
-            docker rm ${{ env.XTELECOM_CONTAINER_NAME }}
-            docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/xtelecom:latest
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/xtelecom:latest
-            docker network create \
-              --driver=bridge \
-              --subnet: ${{ env.XTELECOM_SUBNET_CIDR }} \
-              ${{ env.XTELECOM_NETWORK_NAME }}
-            docker run -d \
-              --name=${{ env.XTELECOM_CONTAINER_NAME }} \
-              --hostname=${{ env.XTELECOM_HOST_NAME }} \
-              --net=${{ env.XTELECOM_NETWORK_NAME }} \
-              --restart=unless-stopped \
-              -v static_value:/app/static/ \
-              -v media_value:/app/media/ \
-              ${{ secrets.DOCKERHUB_USERNAME }}/xtelecom:latest
+  # deploy:
+  #   name: Deploy on Asustor with Tuna
+  #   runs-on: ubuntu-latest
+  #   needs: build
+  #   steps:
+  #     - name: executing remote ssh commands using password
+  #       uses: appleboy/ssh-action@v1.0.0
+  #       with:
+  #         host: ${{ env.TUNA_HOST }}
+  #         username: ${{ env.TUNA_SSH_USER }}
+  #         password: ${{ secrets.TUNA_SSH_PWD }}
+  #         port: ${{ env.TUNA_SSH_PORT }}
+  #         script: |
+  #           docker stop ${{ env.XTELECOM_CONTAINER_NAME }}
+  #           docker rm ${{ env.XTELECOM_CONTAINER_NAME }}
+  #           docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/xtelecom:latest
+  #           docker pull ${{ secrets.DOCKERHUB_USERNAME }}/xtelecom:latest
+  #           docker network create \
+  #             --driver=bridge \
+  #             --subnet: ${{ env.XTELECOM_SUBNET_CIDR }} \
+  #             ${{ env.XTELECOM_NETWORK_NAME }}
+  #           docker run -d \
+  #             --name=${{ env.XTELECOM_CONTAINER_NAME }} \
+  #             --hostname=${{ env.XTELECOM_HOST_NAME }} \
+  #             --net=${{ env.XTELECOM_NETWORK_NAME }} \
+  #             --restart=unless-stopped \
+  #             -v static_value:/app/static/ \
+  #             -v media_value:/app/media/ \
+  #             ${{ secrets.DOCKERHUB_USERNAME }}/xtelecom:latest
 
   inform:
     name: Send message to Telegram account
     runs-on: ubuntu-latest
-    needs: deploy
+    # needs: deploy
+    needs: build
     steps:
       - name: send message
         uses: appleboy/telegram-action@master
