@@ -1,14 +1,18 @@
 from fastapi import FastAPI
 from telecom.core.config import settings
 
-app = FastAPI(title=settings.app_title, docs_url="/swagger")
+xtelecom = FastAPI(
+    title=settings.app_title,
+    docs_url="/swagger",
+    redoc_url=None,
+)
 
 
-@app.get("/")
-def read_root():
+@xtelecom.get("/")
+def read_root() -> dict[str, str]:
     return {"hello": "telecom"}
 
 
-@app.get("/config", tags=["settings"])
-def read_config():
+@xtelecom.get("/config", tags=["settings"])
+def read_config() -> dict[str, str]:
     return {"model_dump": "Settings().model_dump()"}
