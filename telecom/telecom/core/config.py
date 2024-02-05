@@ -4,6 +4,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     api_v1_str: str = "/api/v1"
     app_title: str = "Телеком услуги"
+    app_description: str = "MyAwesomeApp"
     database_url: str
 
     model_config = SettingsConfigDict(
