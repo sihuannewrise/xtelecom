@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 from starlette.staticfiles import StaticFiles
 
-from app.api.v1.routers import main_router
-from app.core.config import settings
+from telecom.api.v1.routers import main_router
+from telecom.core.config import settings
 
 # from telecom.services import create_first_superuser, fill_supp_tables
 
