@@ -1,5 +1,5 @@
-# xwick ecosystem
-## Экосистема сервисов
+# xwick telecom
+## Услуги связи
 
 ![telecom workflow](https://github.com/sihuannewrise/xwick/actions/workflows/telecom.yml/badge.svg?branch=main)
 
