@@ -13,6 +13,7 @@ class Base(DeclarativeBase):
     description: Mapped[Optional[str]] = mapped_column(String(150))
 
     @declared_attr.directive
+    @classmethod
     def __tablename__(cls) -> str:
         return cls.__name__.lower()
 
