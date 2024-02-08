@@ -1,11 +1,9 @@
 {
-	"[python]": {
-		"editor.defaultFormatter": "ms-python.black-formatter"
-	},
 	"editor.codeActionsOnSave": [
 		"source.organizeImports",
 		"source.fixAll"
 	],
+	"editor.wordWrap": "on",
 	"python.analysis.autoImportCompletions": true,
 	"python.analysis.typeCheckingMode": "basic"
 }
