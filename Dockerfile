@@ -9,7 +9,7 @@ COPY ./requirements.txt .
 
 RUN pip3 install -r requirements.txt --no-cache-dir
 
-ADD telecom /app/telecom
+ADD app /app/telecom
 
 CMD ["uvicorn", "telecom.main:app", "--host=0.0.0.0"]
 

@@ -35,7 +35,7 @@ jobs:
       run: | 
         python -m pip install --upgrade pip 
         pip install flake8 pep8-naming flake8-broken-line flake8-return
-        pip install -r telecom/requirements.txt 
+        pip install -r app/requirements.txt 
     - 
       name: Test with flake8 and run tests
       run: |
@@ -63,7 +63,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: telecom
-          file: telecom/Dockerfile
+          file: Dockerfile
           push: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/xtelecom:latest
