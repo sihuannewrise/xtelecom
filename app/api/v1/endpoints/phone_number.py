@@ -20,12 +20,3 @@ def read_root() -> dict[str, str]:
     - **education_level**: уровень образования (опционально)
     """
     return {"hello": "telecom"}
-
-
-@router.get(
-    "/config",
-    tags=["settings", "xtelecom"],
-    summary="Приветствие не автора",
-)
-def read_config() -> dict[str, str]:
-    return {"model_dump": "Settings().model_dump()"}

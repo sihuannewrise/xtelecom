@@ -1,15 +1,10 @@
 from fastapi import APIRouter
-from app.v1.endpoints import user_router, bank_router
-from app.v1.views import web_router
+
+from app.api.v1.endpoints.phone_number import router as phone_number_router
 
 main_router = APIRouter()
-main_router.include_router(user_router)
 main_router.include_router(
-    bank_router,
-    prefix='/bank',
-    tags=['Bank']
-)
-main_router.include_router(
-    web_router,
-    tags=['Web'],
+    phone_number_router,
+    prefix='/phone_numbers',
+    tags=['Phone numbers']
 )
