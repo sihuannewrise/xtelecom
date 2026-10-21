@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from src.application import mappers
 from src.application.ports import (
     EntryRepositoryProtocol,

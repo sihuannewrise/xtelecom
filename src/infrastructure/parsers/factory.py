@@ -1,10 +1,8 @@
 from .base import ChargesParser
 from .xlsx_calls_parser import XlsxCallsParser
-from .xml_parser import XmlChargesParser
 
 
 _PARSERS: dict[str, type] = {
-    "xml": XmlChargesParser,
     "xlsx_calls": XlsxCallsParser,
 }
 

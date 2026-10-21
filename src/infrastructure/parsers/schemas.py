@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from datetime import date, datetime
 from decimal import Decimal, ROUND_HALF_UP
 
@@ -23,21 +21,15 @@ _MONEY_FIELDS = [
 
 
 class ChargeEntrySchema(BaseModel):
-    """Детальная строка или итог — общая схема для всех форматов."""
-
     model_config = ConfigDict(
-        populate_by_name=True,
-        str_strip_whitespace=True,
-        extra="ignore",
+        populate_by_name=True, str_strip_whitespace=True, extra="ignore",
     )
 
-    ctn: str | None = Field(default=None, description="Номер телефона")
-    ban: str | None = Field(default=None, description="Договор")
-    ben: str | None = Field(default=None, description="Группа счетов")
-
+    ctn: str | None = None
+    ban: str | None = None
+    ben: str | None = None
     period_start_date: date
     period_end_date: date
-
     offer_description: str | None = None
 
     usag_intl_actv_amt: Decimal = Decimal("0")
@@ -71,7 +63,6 @@ class ChargeEntrySchema(BaseModel):
     @field_validator("period_start_date", "period_end_date", mode="before")
     @classmethod
     def parse_date(cls, v):
-        """Поддержка DD.MM.YYYY, YYYY-MM-DD и date."""
         if isinstance(v, date):
             return v
         if isinstance(v, str):
@@ -96,8 +87,6 @@ class ChargeEntrySchema(BaseModel):
 
 
 class ChargesFile(BaseModel):
-    """Результат парсинга любого источника."""
-
     model_config = ConfigDict(populate_by_name=True)
 
     source_type: str
@@ -112,7 +101,7 @@ class CallRecordSchema(BaseModel):
 
     started_at: datetime = Field(alias="Начало вызова")
     dialed_number: str = Field(alias="Набранный №")
-    caller_number: str = Field(alias="№ звонящего")   # наш номер
+    caller_number: str = Field(alias="№ звонящего")
     city: str | None = Field(default=None, alias="Город")
     duration_sec: int = Field(default=0, alias="Длит-ть розн.")
     rate: Decimal = Field(default=Decimal("0"), alias="Тариф розн.")
@@ -131,7 +120,6 @@ class CallRecordSchema(BaseModel):
     @field_validator("dialed_number", "caller_number", mode="before")
     @classmethod
     def to_str(cls, v):
-        # Excel может отдать число — приводим к строке без .0
         if isinstance(v, float) and v.is_integer():
             return str(int(v))
         return str(v).strip()

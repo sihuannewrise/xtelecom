@@ -1,6 +1,3 @@
-# src/infrastructure/config.py
-from __future__ import annotations
-
 import ssl
 from functools import lru_cache
 
