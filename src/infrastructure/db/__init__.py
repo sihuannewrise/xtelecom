@@ -3,7 +3,8 @@ from .models import (
     ChargeEntry,
     ChargesReport,
     ChargesSummary,
-    ChargeTotalByCtn,
+    ChargesAmountsMixin,
+    FieldDictionary,
 )
 
 __all__ = [
@@ -11,5 +12,6 @@ __all__ = [
     "ChargeEntry",
     "ChargesReport",
     "ChargesSummary",
-    "ChargeTotalByCtn",
+    "ChargesAmountsMixin",
+    "FieldDictionary",
 ]
