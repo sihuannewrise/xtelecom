@@ -1,19 +1,17 @@
+# alembic/env.py
 from __future__ import annotations
 
 import asyncio
 from logging.config import fileConfig
 
 from alembic import context
-from sqlalchemy import pool
 from sqlalchemy.engine import Connection
-from sqlalchemy.ext.asyncio import async_engine_from_config
 
-from src.infrastructure.config import settings
-from src.infrastructure.db.base import Base
-from src.infrastructure.db import models  # noqa: F401  (регистрирует модели)
+from src.infrastructure.config import get_engine, settings
+from src.infrastructure.db import Base
+from src.infrastructure.db import models  # noqa: F401
 
 config = context.config
-
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
@@ -22,12 +20,9 @@ config.set_main_option("sqlalchemy.url", settings.database_url)
 target_metadata = Base.metadata
 
 
-# ---------- offline (генерация SQL без подключения) ----------
-
 def run_migrations_offline() -> None:
-    url = config.get_main_option("sqlalchemy.url")
     context.configure(
-        url=url,
+        url=settings.database_url,
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
@@ -37,8 +32,6 @@ def run_migrations_offline() -> None:
     with context.begin_transaction():
         context.run_migrations()
 
-
-# ---------- online (async) ----------
 
 def do_run_migrations(connection: Connection) -> None:
     context.configure(
@@ -52,14 +45,10 @@ def do_run_migrations(connection: Connection) -> None:
 
 
 async def run_async_migrations() -> None:
-    connectable = async_engine_from_config(
-        config.get_section(config.config_ini_section, {}),
-        prefix="sqlalchemy.",
-        poolclass=pool.NullPool,
-    )
-    async with connectable.connect() as connection:
+    engine = get_engine()
+    async with engine.connect() as connection:
         await connection.run_sync(do_run_migrations)
-    await connectable.dispose()
+    await engine.dispose()
 
 
 def run_migrations_online() -> None:
