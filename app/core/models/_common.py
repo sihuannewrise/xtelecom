@@ -1,10 +1,20 @@
 from datetime import datetime
-from typing import List, Optional
-from sqlalchemy import String, text
-from sqlalchemy.orm import relationship, Mapped, mapped_column
+from typing import TYPE_CHECKING, Optional
+
+from sqlalchemy import String, false, text
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.db import Base
 from ._selectchoice import EntityStatus
+
+if TYPE_CHECKING:
+    from .bank_account import BankAccount, CaAccountMapping
+    from .counteragent import CaKppMapping, CounterAgent
+    # from .payment import (
+    #     PaymentProcessing,
+    #     PaymentRegister,
+    #     PaymentRequest,
+    # )
 
 
 class BaseWithPK(Base):
@@ -17,12 +27,10 @@ class SupplementaryBase(BaseWithPK):
     name: Mapped[str] = mapped_column(String(50), unique=True)
 
     def __repr__(self) -> str:
-        if self.description:
-            return (
-                f'<{self.__class__.__name__} ({self.name}-{self.description})>'
-            )
-        else:
-            return f'<{self.__class__.__name__} ({self.name})>'
+        description = getattr(self, 'description', None)
+        if description is not None:
+            return f'<{type(self).__name__} ({self.name}-{self.description})>'
+        return f'<{type(self).__name__} ({self.name})>'
 
 
 class EntityBase(Base):
@@ -35,116 +43,107 @@ class EntityBase(Base):
     registration_date: Mapped[Optional[datetime]]
     liquidation_date: Mapped[Optional[datetime]]
 
-    is_archived: Mapped[Optional[bool]] = mapped_column(
-        server_default=text('FALSE'))
+    is_archived: Mapped[bool] = mapped_column(
+        server_default=false(), nullable=False
+    )
 
     def __repr__(self) -> str:
-        return f'<{self.__class__.__name__} ({self.name})>'
+        name = getattr(self, 'name', None)
+        if name is not None:
+            return f'<{type(self).__name__} ({name})>'
 
 
 class BankAccountType(SupplementaryBase):
-    """
-    основной, инвест, спецсчет
-    """
-    accounts: Mapped[List['CaAccountMapping']] = relationship(
-        backref='bankaccounttype',
+    """основной, инвест, спецсчет."""
+
+    accounts: Mapped[list[CaAccountMapping]] = relationship(
+        back_populates='bankaccounttype'
     )
 
 
 class PaymentType(SupplementaryBase):
-    """
-    контрагенту, в бюджет, инвест
-    """
-    pr_list: Mapped[List['PaymentRequest']] = relationship(
-        backref='paymenttype',
+    """контрагенту, в бюджет, инвест."""
+
+    pr_list: Mapped[list[PaymentRequest]] = relationship(
+        back_populates='paymenttype'
     )
 
 
 class KFP(SupplementaryBase):
-    """
-    код финансовой позиции
-    """
-    pr_list: Mapped[List['PaymentRequest']] = relationship(
-        backref='kfp',
+    """Код финансовой позиции."""
+
+    pr_list: Mapped[list[PaymentRequest]] = relationship(
+        back_populates='kfp'
     )
 
 
 class PayerStatus(SupplementaryBase):
-    """
-    Статус плательщика
-    """
-    pr_list: Mapped[List['PaymentRequest']] = relationship(
-        backref='payerstatus',
+    """Статус плательщика."""
+
+    pr_list: Mapped[list[PaymentRequest]] = relationship(
+        back_populates='payerstatus'
     )
 
 
 class KBK(SupplementaryBase):
-    """
-    КБК
-    """
-    pr_list: Mapped[List['PaymentRequest']] = relationship(
-        backref='kbk',
+    """КБК."""
+
+    pr_list: Mapped[list[PaymentRequest]] = relationship(
+        back_populates='kbk'
     )
 
 
 class OKTMO(SupplementaryBase):
-    """
-    ОКТМО
-    """
-    pr_list: Mapped[List['PaymentRequest']] = relationship(
-        backref='oktmo',
+    """ОКТМО."""
+
+    pr_list: Mapped[list[PaymentRequest]] = relationship(
+        back_populates='oktmo'
     )
 
 
 class Prepayment(SupplementaryBase):
-    """
-    Платеж авансовый или по факту
-    """
-    pr_list: Mapped[List['PaymentRequest']] = relationship(
-        backref='prepayment',
+    """Платёж авансовый или по факту."""
+
+    pr_list: Mapped[list[PaymentRequest]] = relationship(
+        back_populates='prepayment'
     )
 
 
 class PaymentStatus(SupplementaryBase):
-    """
-    статус платежа: у исполнителя, на подписи, на исполнении
-    """
-    register: Mapped[List['PaymentRegister']] = relationship(
-        backref='paymentstatus',
+    """Статус платежа: у исполнителя, на подписи, на исполнении."""
+
+    register: Mapped[list[PaymentRegister]] = relationship(
+        back_populates='paymentstatus'
     )
 
 
 class PaymentVerdict(SupplementaryBase):
-    """
-    решение подписанта: согласовано, на доработку, отклонено
-    """
-    proc: Mapped[List['PaymentProcessing']] = relationship(
-        backref='paymentverdict',
+    """Решение подписанта: согласовано, на доработку, отклонено."""
+
+    proc: Mapped[list[PaymentProcessing]] = relationship(
+        back_populates='paymentverdict'
     )
 
 
 class KPP(SupplementaryBase):
-    """
-    список КПП
-    """
-    ca_list: Mapped[List['CaKppMapping']] = relationship(
-        backref='kpp',
+    """Справочник КПП."""
+
+    ca_list: Mapped[list[CaKppMapping]] = relationship(
+        back_populates='kpp'
     )
 
 
 class CounterAgentGroup(SupplementaryBase):
-    """
-    группа контрагентов (ЛУКОЙЛ, госорганы)
-    """
-    ca_list: Mapped[List['CounterAgent']] = relationship(
-        backref='counteragentgroup',
+    """Группа контрагентов (ЛУКОЙЛ, госорганы)."""
+
+    ca_list: Mapped[list[CounterAgent]] = relationship(
+        back_populates='counteragentgroup'
     )
 
 
 class Currency(SupplementaryBase):
-    """
-    справочник валют
-    """
-    acc_list: Mapped[List['BankAccount']] = relationship(
-        backref='currency',
+    """Справочник валют."""
+
+    acc_list: Mapped[list[BankAccount]] = relationship(
+        back_populates='currency'
     )
